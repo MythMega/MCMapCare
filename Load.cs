@@ -9,6 +9,15 @@ namespace MCMapCare
 
         private void Load_Load(object sender, EventArgs e)
         {
+            // Applique le thème sombre
+            ThemeManager.Apply(this);
+            ThemeManager.ApplyPrimaryButton(btnOpenSelectedWorld);
+            LoadWorldList();
+        }
+
+        private void LoadWorldList()
+        {
+            WorldLists.Items.Clear();
             string worldListFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".minecraft", "saves");
             string[] folders = Directory.GetDirectories(worldListFolder);
             foreach (string folder in folders)
@@ -18,8 +27,6 @@ namespace MCMapCare
                     string folderName = Path.GetFileName(folder);
                     WorldLists.Items.Add(folderName);
                 }
-                else
-                    Console.WriteLine($"Folder {folder} ignored");
             }
         }
 
@@ -32,8 +39,12 @@ namespace MCMapCare
             }
             string selectedWorld = WorldLists.Text;
             string folderToload = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".minecraft", "saves", selectedWorld);
-
             new WorldManagement(folderToload).Show();
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            LoadWorldList();
         }
     }
 }

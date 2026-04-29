@@ -36,6 +36,7 @@ namespace MCMapCare
             recentsWorldsToolStripMenuItem = new ToolStripMenuItem();
             WorldLists = new ListBox();
             btnOpenSelectedWorld = new Button();
+            btnRefresh = new Button();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -75,26 +76,37 @@ namespace MCMapCare
             // WorldLists
             // 
             WorldLists.FormattingEnabled = true;
-            WorldLists.Location = new Point(12, 37);
+            WorldLists.Location = new Point(12, 53);
             WorldLists.Name = "WorldLists";
             WorldLists.Size = new Size(424, 184);
             WorldLists.TabIndex = 1;
             // 
             // btnOpenSelectedWorld
             // 
-            btnOpenSelectedWorld.Location = new Point(12, 227);
+            btnOpenSelectedWorld.Location = new Point(12, 243);
             btnOpenSelectedWorld.Name = "btnOpenSelectedWorld";
             btnOpenSelectedWorld.Size = new Size(424, 92);
             btnOpenSelectedWorld.TabIndex = 2;
-            btnOpenSelectedWorld.Text = "btnOpenSelectedWorld";
+            btnOpenSelectedWorld.Text = "Open Selected World";
             btnOpenSelectedWorld.UseVisualStyleBackColor = true;
             btnOpenSelectedWorld.Click += btnOpenSelectedWorld_Click;
+            // 
+            // btnRefresh
+            // 
+            btnRefresh.Location = new Point(361, 27);
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(75, 23);
+            btnRefresh.TabIndex = 3;
+            btnRefresh.Text = "Refresh";
+            btnRefresh.UseVisualStyleBackColor = true;
+            btnRefresh.Click += btnRefresh_Click;
             // 
             // Load
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(448, 331);
+            ClientSize = new Size(448, 350);
+            Controls.Add(btnRefresh);
             Controls.Add(btnOpenSelectedWorld);
             Controls.Add(WorldLists);
             Controls.Add(menuStrip1);
@@ -118,5 +130,6 @@ namespace MCMapCare
         private ToolStripMenuItem recentsWorldsToolStripMenuItem;
         private ListBox WorldLists;
         private Button btnOpenSelectedWorld;
+        private Button btnRefresh;
     }
 }

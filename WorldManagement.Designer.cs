@@ -31,15 +31,15 @@ namespace MCMapCare
             dataGridViewWorlds = new DataGridView();
             colWorldName = new DataGridViewTextBoxColumn();
             colWorldDirection = new DataGridViewComboBoxColumn();
-            panelWorldListButtons = new Panel();
-            btnAddFromSaves = new Button();
-            btnAddCustom = new Button();
-            btnRemoveWorld = new Button();
             colWorldArchitecture = new DataGridViewTextBoxColumn();
             colRegionOverworld = new DataGridViewTextBoxColumn();
             colRegionNether = new DataGridViewTextBoxColumn();
             colRegionEnd = new DataGridViewTextBoxColumn();
             colRegionOther = new DataGridViewTextBoxColumn();
+            panelWorldListButtons = new Panel();
+            btnAddFromSaves = new Button();
+            btnAddCustom = new Button();
+            btnRemoveWorld = new Button();
             labelKeyWorldName = new Label();
             labelValWorldName = new Label();
             labelKeySeed = new Label();
@@ -256,6 +256,7 @@ namespace MCMapCare
             colWorldName.HeaderText = "Monde";
             colWorldName.Name = "colWorldName";
             colWorldName.ReadOnly = true;
+            colWorldName.Width = 70;
             // 
             // colWorldDirection
             // 
@@ -264,36 +265,42 @@ namespace MCMapCare
             colWorldDirection.HeaderText = "Direction d'import";
             colWorldDirection.Items.AddRange(new object[] { "N", "NE", "E", "SE", "S", "SO", "O", "NO" });
             colWorldDirection.Name = "colWorldDirection";
+            colWorldDirection.Width = 110;
             // 
             // colWorldArchitecture
             // 
             colWorldArchitecture.HeaderText = "Architecture";
             colWorldArchitecture.Name = "colWorldArchitecture";
             colWorldArchitecture.ReadOnly = true;
+            colWorldArchitecture.Width = 97;
             // 
             // colRegionOverworld
             // 
             colRegionOverworld.HeaderText = "Overworld";
             colRegionOverworld.Name = "colRegionOverworld";
             colRegionOverworld.ReadOnly = true;
+            colRegionOverworld.Width = 87;
             // 
             // colRegionNether
             // 
             colRegionNether.HeaderText = "Nether";
             colRegionNether.Name = "colRegionNether";
             colRegionNether.ReadOnly = true;
+            colRegionNether.Width = 68;
             // 
             // colRegionEnd
             // 
             colRegionEnd.HeaderText = "End";
             colRegionEnd.Name = "colRegionEnd";
             colRegionEnd.ReadOnly = true;
+            colRegionEnd.Width = 52;
             // 
             // colRegionOther
             // 
             colRegionOther.HeaderText = "Autres";
             colRegionOther.Name = "colRegionOther";
             colRegionOther.ReadOnly = true;
+            colRegionOther.Width = 66;
             // 
             // panelWorldListButtons
             // 
@@ -332,10 +339,6 @@ namespace MCMapCare
             btnRemoveWorld.TabIndex = 2;
             btnRemoveWorld.Text = "Retirer";
             btnRemoveWorld.Click += btnRemoveWorld_Click;
-            // 
-            // colWorldArchitecture
-            // 
-            colWorldArchitecture.Name = "colWorldArchitecture";
             // 
             // labelKeyWorldName
             // 
@@ -500,27 +503,6 @@ namespace MCMapCare
             ((System.ComponentModel.ISupportInitialize)dataGridViewWorlds).EndInit();
             panelWorldListButtons.ResumeLayout(false);
             ResumeLayout(false);
-        }
-
-        /// <summary>
-        /// Configure une ligne cle/valeur dans la grille d'informations du monde.
-        /// </summary>
-        private static void ConfigureInfoRow(TableLayoutPanel table, int row, Label keyLabel, string keyText, Label valueLabel)
-        {
-            keyLabel.Text = keyText;
-            keyLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            keyLabel.Dock = DockStyle.Fill;
-            keyLabel.TextAlign = ContentAlignment.MiddleLeft;
-            keyLabel.Name = $"labelKey_{row}";
-
-            valueLabel.Font = new Font("Segoe UI", 10F);
-            valueLabel.Dock = DockStyle.Fill;
-            valueLabel.TextAlign = ContentAlignment.MiddleLeft;
-            valueLabel.Text = "---";
-            valueLabel.Name = $"labelVal_{row}";
-
-            table.Controls.Add(keyLabel, 0, row);
-            table.Controls.Add(valueLabel, 1, row);
         }
 
         private Label labelWorldTitle;

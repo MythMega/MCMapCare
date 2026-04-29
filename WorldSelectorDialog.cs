@@ -26,6 +26,9 @@ namespace MCMapCare
 
         private void WorldSelectorDialog_Load(object sender, EventArgs e)
         {
+            // Applique le thème sombre
+            ThemeManager.Apply(this);
+            ThemeManager.ApplyPrimaryButton(btnOk);
             // Parcourt les sous-dossiers du dossier saves et liste les mondes valides
             foreach (string folder in Directory.GetDirectories(_savesPath))
             {

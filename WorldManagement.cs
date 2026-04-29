@@ -23,8 +23,9 @@ namespace MCMapCare
     {
         // Identifiants internes des trois dimensions supportées
         private const string DimOverworld = "overworld";
-        private const string DimNether    = "nether";
-        private const string DimEnd       = "end";
+
+        private const string DimNether = "nether";
+        private const string DimEnd = "end";
 
         private readonly string _worldPath;
 
@@ -39,8 +40,64 @@ namespace MCMapCare
 
         private async void WorldManagement_Load(object sender, EventArgs e)
         {
+            // Applique le thème sombre avant l'affichage
+            ThemeManager.Apply(this);
+            ThemeManager.ApplyPrimaryButton(btnStartMerge);
+
+            // Configure l'onglet Info (le Designer VS ne gère pas l'ajout de contrôles
+            // dans un TableLayoutPanel via des méthodes personnalisées)
+            SetupInfoTab();
+
             labelWorldTitle.Text = Path.GetFileName(_worldPath);
             await LoadWorldInfoAsync();
+        }
+
+        /// <summary>
+        /// Configure l'onglet Info : corrige les styles de colonnes et ajoute
+        /// les paires clé/valeur dans le TableLayoutPanel.
+        /// </summary>
+        private void SetupInfoTab()
+        {
+            // Corrige les ColumnStyles que le Designer remet à leur valeur par défaut
+            tableLayoutInfo.ColumnStyles.Clear();
+            tableLayoutInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210F));
+            tableLayoutInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,  100F));
+            tableLayoutInfo.Controls.Clear();
+
+            // Ajoute chaque ligne clé/valeur avec son style
+            AddInfoRow(0, labelKeyWorldName,   "Nom du monde :",        labelValWorldName);
+            AddInfoRow(1, labelKeySeed,        "Graine (Seed) :",       labelValSeed);
+            AddInfoRow(2, labelKeyGameMode,    "Mode de jeu :",         labelValGameMode);
+            AddInfoRow(3, labelKeyDifficulty,  "Difficulté :",          labelValDifficulty);
+            AddInfoRow(4, labelKeyVersion,     "Version Minecraft :",   labelValVersion);
+            AddInfoRow(5, labelKeyHardcore,    "Hardcore :",            labelValHardcore);
+            AddInfoRow(6, labelKeySpawn,       "Point d'apparition :",  labelValSpawn);
+            AddInfoRow(7, labelKeyCheats,      "Triche activée :",      labelValCheats);
+            AddInfoRow(8, labelKeyGameTime,    "Temps de jeu :",        labelValGameTime);
+            AddInfoRow(9, labelKeyDataVersion, "Version des données :", labelValDataVersion);
+        }
+
+        /// <summary>
+        /// Ajoute une ligne clé/valeur dans la grille d'informations avec le style du thème.
+        /// </summary>
+        private void AddInfoRow(int row, Label keyLabel, string keyText, Label valueLabel)
+        {
+            keyLabel.Text      = keyText;
+            keyLabel.Font      = new Font("Segoe UI", 10F, FontStyle.Bold);
+            keyLabel.Dock      = DockStyle.Fill;
+            keyLabel.TextAlign = ContentAlignment.MiddleLeft;
+            keyLabel.ForeColor = ThemeManager.TextSecondary;
+            keyLabel.BackColor = Color.Transparent;
+
+            valueLabel.Text      = "—";
+            valueLabel.Font      = new Font("Segoe UI", 10F);
+            valueLabel.Dock      = DockStyle.Fill;
+            valueLabel.TextAlign = ContentAlignment.MiddleLeft;
+            valueLabel.ForeColor = ThemeManager.TextPrimary;
+            valueLabel.BackColor = Color.Transparent;
+
+            tableLayoutInfo.Controls.Add(keyLabel,   0, row);
+            tableLayoutInfo.Controls.Add(valueLabel, 1, row);
         }
 
         // ===========================
@@ -70,7 +127,7 @@ namespace MCMapCare
 
                 string levelName = Get("Data.LevelName");
                 labelValWorldName.Text = levelName;
-                labelWorldTitle.Text   = levelName;
+                labelWorldTitle.Text = levelName;
 
                 // Graine : nouveau format (1.16+) ou ancien format
                 string seed = Get("Data.WorldGenSettings.seed");
@@ -95,17 +152,17 @@ namespace MCMapCare
                     var raw => $"Inconnue ({raw})"
                 };
 
-                labelValVersion.Text  = Get("Data.Version.Name");
+                labelValVersion.Text = Get("Data.Version.Name");
                 labelValHardcore.Text = Get("Data.hardcore") == "1" ? "Oui" : "Non";
-                labelValSpawn.Text    = $"X={Get("Data.SpawnX")}  Y={Get("Data.SpawnY")}  Z={Get("Data.SpawnZ")}";
-                labelValCheats.Text   = Get("Data.allowCommands") == "1" ? "Oui" : "Non";
+                labelValSpawn.Text = $"X={Get("Data.SpawnX")}  Y={Get("Data.SpawnY")}  Z={Get("Data.SpawnZ")}";
+                labelValCheats.Text = Get("Data.allowCommands") == "1" ? "Oui" : "Non";
 
                 // Temps de jeu : conversion ticks vers heures/minutes
                 string timeRaw = Get("Data.Time");
                 if (long.TryParse(timeRaw, out long ticks))
                 {
                     long seconds = ticks / 20;
-                    long hours   = seconds / 3600;
+                    long hours = seconds / 3600;
                     long minutes = (seconds % 3600) / 60;
                     labelValGameTime.Text = $"{hours}h {minutes}min  ({ticks:N0} ticks)";
                 }
@@ -147,14 +204,14 @@ namespace MCMapCare
             return dimension switch
             {
                 DimOverworld => isNew
-                    ? Path.Combine(worldPath, "dimensions", "minecraft", "overworld",  "region")
+                    ? Path.Combine(worldPath, "dimensions", "minecraft", "overworld", "region")
                     : Path.Combine(worldPath, "region"),
                 DimNether => isNew
                     ? Path.Combine(worldPath, "dimensions", "minecraft", "the_nether", "region")
                     : Path.Combine(worldPath, "DIM-1", "region"),
                 DimEnd => isNew
-                    ? Path.Combine(worldPath, "dimensions", "minecraft", "the_end",    "region")
-                    : Path.Combine(worldPath, "DIM1",  "region"),
+                    ? Path.Combine(worldPath, "dimensions", "minecraft", "the_end", "region")
+                    : Path.Combine(worldPath, "DIM1", "region"),
                 _ => throw new ArgumentException($"Dimension inconnue : {dimension}")
             };
         }
@@ -205,9 +262,9 @@ namespace MCMapCare
         private static string DimToLabel(string dimension) => dimension switch
         {
             DimOverworld => "Overworld",
-            DimNether    => "Nether",
-            DimEnd       => "End",
-            _            => dimension
+            DimNether => "Nether",
+            DimEnd => "End",
+            _ => dimension
         };
 
         // ===========================
@@ -292,13 +349,13 @@ namespace MCMapCare
             _mergeWorldPaths.Add(worldPath);
 
             // Détection de l'architecture du monde importé
-            bool   isNew = IsNewArchitecture(worldPath);
-            string arch  = isNew ? "MC 26+" : "Classique";
+            bool isNew = IsNewArchitecture(worldPath);
+            string arch = isNew ? "MC 26+" : "Classique";
 
             // Comptage des régions par dimension
-            int owCount    = CountRegions(worldPath, DimOverworld);
-            int neCount    = CountRegions(worldPath, DimNether);
-            int enCount    = CountRegions(worldPath, DimEnd);
+            int owCount = CountRegions(worldPath, DimOverworld);
+            int neCount = CountRegions(worldPath, DimNether);
+            int enCount = CountRegions(worldPath, DimEnd);
             // Dimensions non standard : uniquement visibles sur nouvelle architecture
             int otherCount = isNew ? CountOtherDimensions(worldPath) : 0;
             string otherDisplay = isNew ? otherCount.ToString() : "—";
@@ -334,7 +391,7 @@ namespace MCMapCare
             var mergeEntries = new List<(string Path, string Direction)>();
             for (int i = 0; i < dataGridViewWorlds.Rows.Count; i++)
             {
-                string path      = _mergeWorldPaths[i];
+                string path = _mergeWorldPaths[i];
                 string direction = dataGridViewWorlds.Rows[i].Cells[colWorldDirection.Name].Value?.ToString() ?? "E";
                 mergeEntries.Add((path, direction));
             }
@@ -342,26 +399,26 @@ namespace MCMapCare
             // Collecte les dimensions sélectionnées par leur identifiant interne
             var selectedDimensions = new List<string>();
             if (checkBoxOverworld.Checked) selectedDimensions.Add(DimOverworld);
-            if (checkBoxNether.Checked)    selectedDimensions.Add(DimNether);
-            if (checkBoxEnd.Checked)       selectedDimensions.Add(DimEnd);
+            if (checkBoxNether.Checked) selectedDimensions.Add(DimNether);
+            if (checkBoxEnd.Checked) selectedDimensions.Add(DimEnd);
 
             SetUiEnabled(false);
             progressBarMerge.Value = 0;
-            labelStatus.ForeColor  = Color.DimGray;
+            labelStatus.ForeColor = ThemeManager.TextSecondary;
 
             try
             {
                 MergeReport report = await RunMergeAsync(mergeEntries, selectedDimensions);
 
-                labelStatus.Text      = "Fusion terminée avec succès !";
-                labelStatus.ForeColor = Color.Green;
+                labelStatus.Text = "Fusion terminée avec succès !";
+                labelStatus.ForeColor = ThemeManager.Success;
                 MessageBox.Show(BuildMergeSummary(report),
                     "Fusion terminée", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                labelStatus.Text      = $"Erreur : {ex.Message}";
-                labelStatus.ForeColor = Color.Red;
+                labelStatus.Text = $"Erreur : {ex.Message}";
+                labelStatus.ForeColor = ThemeManager.Error;
                 MessageBox.Show(
                     $"Une erreur est survenue pendant la fusion :\n\n{ex.Message}",
                     "Erreur de fusion", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -392,7 +449,7 @@ namespace MCMapCare
             var startTime = DateTime.Now;
 
             string parentDir = Path.GetDirectoryName(_worldPath)!;
-            string baseName  = Path.GetFileName(_worldPath);
+            string baseName = Path.GetFileName(_worldPath);
             string fusedPath = Path.Combine(parentDir, baseName + "_fused");
 
             // Étape 1 : supprime une éventuelle fusion précédente
@@ -408,15 +465,15 @@ namespace MCMapCare
             SetProgress(10);
 
             // Étape 3 : traitement de chaque monde à importer
-            var worldResults        = new List<WorldMergeResult>();
-            int totalOperations     = mergeEntries.Count * selectedDimensions.Count;
+            var worldResults = new List<WorldMergeResult>();
+            int totalOperations = mergeEntries.Count * selectedDimensions.Count;
             int completedOperations = 0;
 
             foreach (var (sourcePath, direction) in mergeEntries)
             {
                 string sourceWorldName = Path.GetFileName(sourcePath);
-                bool   sourceIsNew     = IsNewArchitecture(sourcePath);
-                var    dimResults      = new List<DimensionMergeResult>();
+                bool sourceIsNew = IsNewArchitecture(sourcePath);
+                var dimResults = new List<DimensionMergeResult>();
 
                 foreach (string dim in selectedDimensions)
                 {
@@ -425,7 +482,7 @@ namespace MCMapCare
                     // Résolution des dossiers selon l'architecture de chaque monde indépendamment
                     // Le dossier cible est basé sur l'architecture du monde de BASE (copié dans fusedPath)
                     string sourceRegionDir = GetRegionFolder(sourcePath, dim);
-                    string targetRegionDir = GetRegionFolder(fusedPath,  dim);
+                    string targetRegionDir = GetRegionFolder(fusedPath, dim);
 
                     // Dimension absente dans ce monde source : on la saute sans erreur
                     if (!Directory.Exists(sourceRegionDir))
@@ -555,7 +612,7 @@ namespace MCMapCare
             {
                 "E" or "NE" or "SE" => targetMaxX + 1 - sourceMinX,
                 "O" or "NO" or "SO" => targetMinX - 1 - sourceMaxX,
-                _                   => targetCenterX - sourceCenterX
+                _ => targetCenterX - sourceCenterX
             };
 
             // Offset Z : colle au Sud, au Nord, ou centre sur l'axe Z
@@ -563,7 +620,7 @@ namespace MCMapCare
             {
                 "S" or "SE" or "SO" => targetMaxZ + 1 - sourceMinZ,
                 "N" or "NE" or "NO" => targetMinZ - 1 - sourceMaxZ,
-                _                   => targetCenterZ - sourceCenterZ
+                _ => targetCenterZ - sourceCenterZ
             };
 
             return (offsetX, offsetZ);
@@ -580,7 +637,7 @@ namespace MCMapCare
 
             foreach (string file in Directory.GetFiles(regionDir, "r.*.*.mca"))
             {
-                string name    = Path.GetFileNameWithoutExtension(file);
+                string name = Path.GetFileNameWithoutExtension(file);
                 string[] parts = name.Split('.');
 
                 if (parts.Length >= 3
@@ -609,7 +666,7 @@ namespace MCMapCare
 
             foreach (string sourceFile in Directory.GetFiles(sourceDir, "r.*.*.mca"))
             {
-                string name    = Path.GetFileNameWithoutExtension(sourceFile);
+                string name = Path.GetFileNameWithoutExtension(sourceFile);
                 string[] parts = name.Split('.');
 
                 if (parts.Length < 3
@@ -621,7 +678,7 @@ namespace MCMapCare
                 int newZ = z + offsetZ;
 
                 string newFileName = $"r.{newX}.{newZ}.mca";
-                string destFile    = Path.Combine(targetDir, newFileName);
+                string destFile = Path.Combine(targetDir, newFileName);
 
                 progressCallback(newFileName);
 
