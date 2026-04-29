@@ -48,6 +48,9 @@ namespace MCMapCare
             // dans un TableLayoutPanel via des méthodes personnalisées)
             SetupInfoTab();
 
+            // Configure l'onglet Datapack (branchement des boutons + chargement des listes)
+            SetupDatapackTab();
+
             labelWorldTitle.Text = Path.GetFileName(_worldPath);
             await LoadWorldInfoAsync();
         }
@@ -61,19 +64,19 @@ namespace MCMapCare
             // Corrige les ColumnStyles que le Designer remet à leur valeur par défaut
             tableLayoutInfo.ColumnStyles.Clear();
             tableLayoutInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210F));
-            tableLayoutInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,  100F));
+            tableLayoutInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutInfo.Controls.Clear();
 
             // Ajoute chaque ligne clé/valeur avec son style
-            AddInfoRow(0, labelKeyWorldName,   "Nom du monde :",        labelValWorldName);
-            AddInfoRow(1, labelKeySeed,        "Graine (Seed) :",       labelValSeed);
-            AddInfoRow(2, labelKeyGameMode,    "Mode de jeu :",         labelValGameMode);
-            AddInfoRow(3, labelKeyDifficulty,  "Difficulté :",          labelValDifficulty);
-            AddInfoRow(4, labelKeyVersion,     "Version Minecraft :",   labelValVersion);
-            AddInfoRow(5, labelKeyHardcore,    "Hardcore :",            labelValHardcore);
-            AddInfoRow(6, labelKeySpawn,       "Point d'apparition :",  labelValSpawn);
-            AddInfoRow(7, labelKeyCheats,      "Triche activée :",      labelValCheats);
-            AddInfoRow(8, labelKeyGameTime,    "Temps de jeu :",        labelValGameTime);
+            AddInfoRow(0, labelKeyWorldName, "Nom du monde :", labelValWorldName);
+            AddInfoRow(1, labelKeySeed, "Graine (Seed) :", labelValSeed);
+            AddInfoRow(2, labelKeyGameMode, "Mode de jeu :", labelValGameMode);
+            AddInfoRow(3, labelKeyDifficulty, "Difficulté :", labelValDifficulty);
+            AddInfoRow(4, labelKeyVersion, "Version Minecraft :", labelValVersion);
+            AddInfoRow(5, labelKeyHardcore, "Hardcore :", labelValHardcore);
+            AddInfoRow(6, labelKeySpawn, "Point d'apparition :", labelValSpawn);
+            AddInfoRow(7, labelKeyCheats, "Triche activée :", labelValCheats);
+            AddInfoRow(8, labelKeyGameTime, "Temps de jeu :", labelValGameTime);
             AddInfoRow(9, labelKeyDataVersion, "Version des données :", labelValDataVersion);
         }
 
@@ -82,21 +85,21 @@ namespace MCMapCare
         /// </summary>
         private void AddInfoRow(int row, Label keyLabel, string keyText, Label valueLabel)
         {
-            keyLabel.Text      = keyText;
-            keyLabel.Font      = new Font("Segoe UI", 10F, FontStyle.Bold);
-            keyLabel.Dock      = DockStyle.Fill;
+            keyLabel.Text = keyText;
+            keyLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            keyLabel.Dock = DockStyle.Fill;
             keyLabel.TextAlign = ContentAlignment.MiddleLeft;
             keyLabel.ForeColor = ThemeManager.TextSecondary;
             keyLabel.BackColor = Color.Transparent;
 
-            valueLabel.Text      = "—";
-            valueLabel.Font      = new Font("Segoe UI", 10F);
-            valueLabel.Dock      = DockStyle.Fill;
+            valueLabel.Text = "—";
+            valueLabel.Font = new Font("Segoe UI", 10F);
+            valueLabel.Dock = DockStyle.Fill;
             valueLabel.TextAlign = ContentAlignment.MiddleLeft;
             valueLabel.ForeColor = ThemeManager.TextPrimary;
             valueLabel.BackColor = Color.Transparent;
 
-            tableLayoutInfo.Controls.Add(keyLabel,   0, row);
+            tableLayoutInfo.Controls.Add(keyLabel, 0, row);
             tableLayoutInfo.Controls.Add(valueLabel, 1, row);
         }
 
@@ -728,6 +731,386 @@ namespace MCMapCare
                 Invoke(() => progressBarMerge.Value = clamped);
             else
                 progressBarMerge.Value = clamped;
+        }
+
+        private void buttonGenerateDatapack_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txbDatapackCreationId.Text))
+            {
+                MessageBox.Show("ERROR : ID is null");
+                return;
+            }
+            if (txbDatapackCreationId.Text.Contains(' '))
+            {
+                txbDatapackCreationId.Text = txbDatapackCreationId.Text.Replace(" ", "");
+                MessageBox.Show("WARNING : spaces has been removed from the name of the datapack");
+            }
+            if (txbDatapackCreationId.Text.Length < 3)
+            {
+                MessageBox.Show("ERROR : need a name/id with more than 3 characters");
+                return;
+            }
+            string folderDatapacksGenerate = Path.Combine(_worldPath, "datapacks");
+
+            if (Directory.Exists(Path.Combine(folderDatapacksGenerate, txbDatapackCreationId.Text)))
+            {
+                MessageBox.Show("ERROR : it seems that a datapack with name/id already exist");
+                return;
+            }
+
+            string folderNewDatapack = Path.Combine(folderDatapacksGenerate, txbDatapackCreationId.Text);
+            string packmcmetaFile = Path.Combine(folderNewDatapack, "pack.mcmeta");
+            string folderNewDatapackData = Path.Combine(folderNewDatapack, "data");
+            string folderNewDatapackDataCustomDomain = Path.Combine(folderNewDatapackData, txbDatapackCreationId.Text);
+            string folderNewDatapackDataMinecraftDomain = Path.Combine(folderNewDatapackData, "minecraft");
+
+            string folderNewDatapackAdvancement = Path.Combine(folderNewDatapackDataCustomDomain, "advancement");
+            string folderNewDatapackDialog = Path.Combine(folderNewDatapackDataCustomDomain, "dialog");
+            string folderNewDatapackDimension = Path.Combine(folderNewDatapackDataCustomDomain, "dimension");
+            string folderNewDatapackDimension_type = Path.Combine(folderNewDatapackDataCustomDomain, "dimension_type");
+            string folderNewDatapackEnchantment = Path.Combine(folderNewDatapackDataCustomDomain, "enchantment");
+            string folderNewDatapackFunction = Path.Combine(folderNewDatapackDataCustomDomain, "function");
+            string folderNewDatapackLoot_table = Path.Combine(folderNewDatapackDataCustomDomain, "loot_table");
+            string folderNewDatapackRecipe = Path.Combine(folderNewDatapackDataCustomDomain, "recipe");
+            string folderNewDatapackStructure = Path.Combine(folderNewDatapackDataCustomDomain, "structure");
+            string folderNewDatapackTags = Path.Combine(folderNewDatapackDataCustomDomain, "tags");
+            string folderNewDatapackWorldgen = Path.Combine(folderNewDatapackDataCustomDomain, "worldgen");
+            string[] levelOneFolders =
+                [
+                folderNewDatapackAdvancement,
+                folderNewDatapackDialog,
+                folderNewDatapackDimension,
+                folderNewDatapackDimension_type,
+                folderNewDatapackEnchantment,
+                folderNewDatapackFunction,
+                folderNewDatapackLoot_table,
+                folderNewDatapackRecipe,
+                folderNewDatapackStructure,
+                folderNewDatapackTags,
+                folderNewDatapackWorldgen,
+            ];
+            string packmcmetaContent = $@"{{
+  ""pack"": {{
+    ""description"": ""{txbDatapackCreationDesc.Text}"",
+    ""min_format"": [
+      101,
+      1
+    ],
+    ""max_format"": 999
+  }}
+}}";
+            // global folders pack
+            if (!Directory.Exists(folderDatapacksGenerate))
+                Directory.CreateDirectory(folderDatapacksGenerate);
+            if (!Directory.Exists(folderNewDatapack))
+                Directory.CreateDirectory(folderNewDatapack);
+            if (!File.Exists(packmcmetaFile))
+                File.WriteAllText(packmcmetaFile, packmcmetaContent);
+            if (!Directory.Exists(folderNewDatapackData))
+                Directory.CreateDirectory(folderNewDatapackData);
+            if (!Directory.Exists(folderNewDatapackDataCustomDomain))
+                Directory.CreateDirectory(folderNewDatapackDataCustomDomain);
+            if (!Directory.Exists(folderNewDatapackDataMinecraftDomain))
+                Directory.CreateDirectory(folderNewDatapackDataMinecraftDomain);
+
+            // custom domain folders pack
+            foreach (string folder in levelOneFolders)
+            {
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
+            }
+
+            // minecraft folders pack
+            string tagsFolder = Path.Combine(folderNewDatapackDataMinecraftDomain, "tags");
+            string tagsFunctionFolder = Path.Combine(tagsFolder, "function");
+
+            if (!Directory.Exists(tagsFolder))
+                Directory.CreateDirectory(tagsFolder);
+            if (!Directory.Exists(tagsFunctionFolder))
+                Directory.CreateDirectory(tagsFunctionFolder);
+
+            if (checkBoxDatapackLoopFunction.Checked)
+            {
+                string loopFunction = Path.Combine(folderNewDatapackFunction, "loop.mcfunction");
+                string loopFunctionTag = Path.Combine(tagsFunctionFolder, "tick.json");
+                if (!File.Exists(loopFunctionTag))
+                {
+                    string loopFunctionText = $@"{{
+ ""values"": [
+ ""{txbDatapackCreationId.Text}:loop""
+ ]
+}}";
+                    File.WriteAllText(loopFunctionTag, loopFunctionText);
+                }
+                if (!File.Exists(loopFunction))
+                {
+                    File.WriteAllText(loopFunction, "");
+                }
+            }
+
+            if (checkBoxDatapackLoadFunction.Checked)
+            {
+                string loopFunction = Path.Combine(folderNewDatapackFunction, "load.mcfunction");
+                string loopFunctionTag = Path.Combine(tagsFunctionFolder, "load.json");
+                if (!File.Exists(loopFunctionTag))
+                {
+                    string loopFunctionText = $@"{{
+ ""values"": [
+ ""{txbDatapackCreationId.Text}:load""
+ ]
+}}";
+                    File.WriteAllText(loopFunctionTag, loopFunctionText);
+                }
+                if (!File.Exists(loopFunction))
+                {
+                    File.WriteAllText(loopFunction, "");
+                }
+            }
+
+            // Rafraîchit la liste Management après création
+            RefreshDatapackLists();
+        }
+
+        // ===========================
+        // ONGLET DATAPACK — Management & Pack DB
+        // ===========================
+
+        /// <summary>Chemin de la base de données locale de packs (AppData/Roaming/JMD/mcmodcare/packdb).</summary>
+        private static readonly string PackDbPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "JMD", "mcmodcare", "packdb");
+
+        /// <summary>Chemin du dossier datapacks du monde actuellement ouvert.</summary>
+        private string WorldDatapacksPath => Path.Combine(_worldPath, "datapacks");
+
+        /// <summary>
+        /// Configure les ListViews et branche les événements des boutons de l'onglet Datapack.
+        /// Appelé depuis WorldManagement_Load (le Designer VS ne gère pas ces branchements).
+        /// </summary>
+        private void SetupDatapackTab()
+        {
+            // ListView des datapacks du monde
+            listViewWorldPacks.View          = View.List;
+            listViewWorldPacks.FullRowSelect = true;
+            listViewWorldPacks.MultiSelect   = true;
+
+            // ListView de la base de packs
+            listViewPackDB.View          = View.List;
+            listViewPackDB.FullRowSelect = true;
+            listViewPackDB.MultiSelect   = true;
+
+            // Groupe Management — datapacks du monde courant
+            btnDatapackManagementDelete.Click    += async (_, _) => await DeleteSelectedAsync(listViewWorldPacks, WorldDatapacksPath);
+            btnDatapackManagementRename.Click    += async (_, _) => await RenameSelectedAsync(listViewWorldPacks, WorldDatapacksPath);
+            btnDatapackManagementOpenFolden.Click += (_, _)      => OpenFolder(WorldDatapacksPath, create: true);
+            btnDatapackManagementSendInDB.Click  += async (_, _) => await SendPacksAsync(listViewWorldPacks, WorldDatapacksPath, PackDbPath);
+
+            // Groupe Pack DB — base de données locale
+            btnDatapackDBDelete.Click      += async (_, _) => await DeleteSelectedAsync(listViewPackDB, PackDbPath);
+            btnDatapackDBRename.Click      += async (_, _) => await RenameSelectedAsync(listViewPackDB, PackDbPath);
+            btnDatapackDBOpenFolder.Click  += (_, _)       => OpenFolder(PackDbPath, create: true);
+            btnDatapackDBSendInWorld.Click += async (_, _) => await SendPacksAsync(listViewPackDB, PackDbPath, WorldDatapacksPath);
+
+            RefreshDatapackLists();
+        }
+
+        /// <summary>
+        /// Rafraîchit les deux ListViews en relisant les dossiers depuis le disque.
+        /// À appeler après toute modification (suppression, renommage, envoi).
+        /// </summary>
+        private void RefreshDatapackLists()
+        {
+            RefreshListView(listViewWorldPacks, WorldDatapacksPath);
+            RefreshListView(listViewPackDB,     PackDbPath);
+        }
+
+        /// <summary>
+        /// Remplit une ListView avec les sous-dossiers d'un répertoire, triés par nom.
+        /// </summary>
+        private static void RefreshListView(ListView lv, string folderPath)
+        {
+            lv.Items.Clear();
+            if (!Directory.Exists(folderPath)) return;
+
+            foreach (string dir in Directory.GetDirectories(folderPath).OrderBy(Path.GetFileName))
+                lv.Items.Add(new ListViewItem(Path.GetFileName(dir)!));
+        }
+
+        /// <summary>
+        /// Supprime définitivement les dossiers sélectionnés après confirmation de l'utilisateur.
+        /// </summary>
+        private async Task DeleteSelectedAsync(ListView lv, string rootPath)
+        {
+            var selected = lv.SelectedItems.Cast<ListViewItem>().ToList();
+            if (selected.Count == 0)
+            {
+                MessageBox.Show("Sélectionnez au moins un datapack.", "Aucune sélection",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            string names = string.Join("\n  • ", selected.Select(i => i.Text));
+            if (MessageBox.Show($"Supprimer définitivement :\n  • {names}\n\nCette action est irréversible.",
+                "Confirmer la suppression", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                return;
+
+            var errors = new List<string>();
+            foreach (var item in selected)
+            {
+                try   { await Task.Run(() => Directory.Delete(Path.Combine(rootPath, item.Text), recursive: true)); }
+                catch (Exception ex) { errors.Add($"  • {item.Text} : {ex.Message}"); }
+            }
+
+            if (errors.Count > 0)
+                MessageBox.Show($"Erreur(s) lors de la suppression :\n{string.Join("\n", errors)}",
+                    "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            RefreshDatapackLists();
+        }
+
+        /// <summary>
+        /// Renomme chaque dossier sélectionné via une boîte de dialogue individuelle
+        /// pré-remplie avec le nom courant.
+        /// </summary>
+        private async Task RenameSelectedAsync(ListView lv, string rootPath)
+        {
+            var selected = lv.SelectedItems.Cast<ListViewItem>().ToList();
+            if (selected.Count == 0)
+            {
+                MessageBox.Show("Sélectionnez au moins un datapack.", "Aucune sélection",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            bool anyChange = false;
+
+            foreach (var item in selected)
+            {
+                string oldName = item.Text;
+                string? newName = ShowInputDialog("Renommer", $"Nouveau nom pour « {oldName} » :", oldName);
+
+                // Annulé, inchangé ou vide → on passe au suivant
+                if (string.IsNullOrWhiteSpace(newName) || newName == oldName) continue;
+
+                if (newName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+                {
+                    MessageBox.Show($"« {newName} » contient des caractères invalides.",
+                        "Nom invalide", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    continue;
+                }
+
+                string newPath = Path.Combine(rootPath, newName);
+                if (Directory.Exists(newPath))
+                {
+                    MessageBox.Show($"Un dossier nommé « {newName} » existe déjà.",
+                        "Conflit", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    continue;
+                }
+
+                try
+                {
+                    await Task.Run(() => Directory.Move(Path.Combine(rootPath, oldName), newPath));
+                    anyChange = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erreur lors du renommage de « {oldName} » :\n{ex.Message}",
+                        "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            if (anyChange) RefreshDatapackLists();
+        }
+
+        /// <summary>
+        /// Copie les dossiers sélectionnés de sourceRoot vers destRoot.
+        /// Propose d'écraser si un dossier de même nom existe déjà à destination.
+        /// </summary>
+        private async Task SendPacksAsync(ListView lv, string sourceRoot, string destRoot)
+        {
+            var selected = lv.SelectedItems.Cast<ListViewItem>().ToList();
+            if (selected.Count == 0)
+            {
+                MessageBox.Show("Sélectionnez au moins un datapack.", "Aucune sélection",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            Directory.CreateDirectory(destRoot);
+            var errors = new List<string>();
+
+            foreach (var item in selected)
+            {
+                string packName = item.Text;
+                string srcPath  = Path.Combine(sourceRoot, packName);
+                string dstPath  = Path.Combine(destRoot,   packName);
+
+                if (Directory.Exists(dstPath))
+                {
+                    if (MessageBox.Show($"« {packName} » existe déjà dans la destination.\nÉcraser ?",
+                        "Conflit", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                        continue;
+
+                    try   { await Task.Run(() => Directory.Delete(dstPath, recursive: true)); }
+                    catch (Exception ex) { errors.Add($"  • {packName} (suppression préalable) : {ex.Message}"); continue; }
+                }
+
+                try   { await Task.Run(() => CopyDirectory(srcPath, dstPath)); }
+                catch (Exception ex) { errors.Add($"  • {packName} : {ex.Message}"); }
+            }
+
+            if (errors.Count > 0)
+                MessageBox.Show($"Erreur(s) lors de l'envoi :\n{string.Join("\n", errors)}",
+                    "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            RefreshDatapackLists();
+        }
+
+        /// <summary>Ouvre un dossier dans l'Explorateur Windows. Le crée si demandé et absent.</summary>
+        private static void OpenFolder(string path, bool create = false)
+        {
+            if (create) Directory.CreateDirectory(path);
+            if (!Directory.Exists(path))
+            {
+                MessageBox.Show($"Le dossier est introuvable :\n{path}",
+                    "Dossier manquant", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            System.Diagnostics.Process.Start("explorer.exe", path);
+        }
+
+        /// <summary>
+        /// Affiche une boîte de dialogue de saisie modale stylisée avec le thème de l'application.
+        /// Retourne le texte saisi (trimé), ou null si l'utilisateur annule.
+        /// </summary>
+        private string? ShowInputDialog(string title, string prompt, string defaultValue)
+        {
+            using var form = new Form
+            {
+                Text            = title,
+                Size            = new Size(380, 152),
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                StartPosition   = FormStartPosition.CenterParent,
+                MaximizeBox     = false,
+                MinimizeBox     = false
+            };
+
+            var label   = new Label  { Text = prompt,        Location = new Point(12, 14), AutoSize = true };
+            var textBox = new TextBox { Text = defaultValue,  Location = new Point(12, 38), Width = 344 };
+            var btnOk   = new Button  { Text = "OK",          Location = new Point(192, 74), Size = new Size(80, 28), DialogResult = DialogResult.OK };
+            var btnAnn  = new Button  { Text = "Annuler",     Location = new Point(278, 74), Size = new Size(80, 28), DialogResult = DialogResult.Cancel };
+
+            form.Controls.AddRange(new Control[] { label, textBox, btnOk, btnAnn });
+            form.AcceptButton = btnOk;
+            form.CancelButton = btnAnn;
+
+            ThemeManager.Apply(form);
+            ThemeManager.ApplyPrimaryButton(btnOk);
+
+            // Sélectionne tout le texte pour faciliter la frappe directe
+            form.Shown += (_, _) => { textBox.SelectAll(); textBox.Focus(); };
+
+            return form.ShowDialog(this) == DialogResult.OK ? textBox.Text.Trim() : null;
         }
     }
 }

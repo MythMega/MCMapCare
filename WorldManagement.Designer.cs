@@ -12,7 +12,7 @@ namespace MCMapCare
 
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorldManagement));
             labelWorldTitle = new Label();
             tabControlMain = new TabControl();
@@ -40,6 +40,28 @@ namespace MCMapCare
             btnAddFromSaves = new Button();
             btnAddCustom = new Button();
             btnRemoveWorld = new Button();
+            tabDatapack = new TabPage();
+            groupBox3 = new GroupBox();
+            btnDatapackDBSendInWorld = new Button();
+            btnDatapackDBOpenFolder = new Button();
+            btnDatapackDBRename = new Button();
+            btnDatapackDBDelete = new Button();
+            listViewPackDB = new ListView();
+            groupBox2 = new GroupBox();
+            btnDatapackManagementOpenFolden = new Button();
+            btnDatapackManagementSendInDB = new Button();
+            btnDatapackManagementRename = new Button();
+            btnDatapackManagementDelete = new Button();
+            listViewWorldPacks = new ListView();
+            groupBox1 = new GroupBox();
+            checkboxCreateDatapackOpenDatapackFolden = new CheckBox();
+            buttonGenerateDatapack = new Button();
+            lblDatapackCreateDesc = new Label();
+            lblDatapackCreateName = new Label();
+            txbDatapackCreationDesc = new TextBox();
+            txbDatapackCreationId = new TextBox();
+            checkBoxDatapackLoadFunction = new CheckBox();
+            checkBoxDatapackLoopFunction = new CheckBox();
             labelKeyWorldName = new Label();
             labelValWorldName = new Label();
             labelKeySeed = new Label();
@@ -68,6 +90,10 @@ namespace MCMapCare
             groupBoxWorldList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewWorlds).BeginInit();
             panelWorldListButtons.SuspendLayout();
+            tabDatapack.SuspendLayout();
+            groupBox3.SuspendLayout();
+            groupBox2.SuspendLayout();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // labelWorldTitle
@@ -85,6 +111,7 @@ namespace MCMapCare
             // 
             tabControlMain.Controls.Add(tabPageInfo);
             tabControlMain.Controls.Add(tabPageMerge);
+            tabControlMain.Controls.Add(tabDatapack);
             tabControlMain.Dock = DockStyle.Fill;
             tabControlMain.Location = new Point(0, 52);
             tabControlMain.Name = "tabControlMain";
@@ -195,7 +222,6 @@ namespace MCMapCare
             // 
             // checkBoxOverworld
             // 
-            checkBoxOverworld.AutoSize = true;
             checkBoxOverworld.Checked = true;
             checkBoxOverworld.CheckState = CheckState.Checked;
             checkBoxOverworld.Location = new Point(16, 22);
@@ -206,7 +232,6 @@ namespace MCMapCare
             // 
             // checkBoxNether
             // 
-            checkBoxNether.AutoSize = true;
             checkBoxNether.Location = new Point(130, 22);
             checkBoxNether.Name = "checkBoxNether";
             checkBoxNether.Size = new Size(62, 19);
@@ -215,7 +240,6 @@ namespace MCMapCare
             // 
             // checkBoxEnd
             // 
-            checkBoxEnd.AutoSize = true;
             checkBoxEnd.Location = new Point(220, 22);
             checkBoxEnd.Name = "checkBoxEnd";
             checkBoxEnd.Size = new Size(46, 19);
@@ -260,8 +284,8 @@ namespace MCMapCare
             // 
             // colWorldDirection
             // 
-            dataGridViewCellStyle1.NullValue = "E";
-            colWorldDirection.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.NullValue = "E";
+            colWorldDirection.DefaultCellStyle = dataGridViewCellStyle2;
             colWorldDirection.HeaderText = "Direction d'import";
             colWorldDirection.Items.AddRange(new object[] { "N", "NE", "E", "SE", "S", "SO", "O", "NO" });
             colWorldDirection.Name = "colWorldDirection";
@@ -339,6 +363,223 @@ namespace MCMapCare
             btnRemoveWorld.TabIndex = 2;
             btnRemoveWorld.Text = "Retirer";
             btnRemoveWorld.Click += btnRemoveWorld_Click;
+            // 
+            // tabDatapack
+            // 
+            tabDatapack.Controls.Add(groupBox3);
+            tabDatapack.Controls.Add(groupBox2);
+            tabDatapack.Controls.Add(groupBox1);
+            tabDatapack.Location = new Point(4, 24);
+            tabDatapack.Name = "tabDatapack";
+            tabDatapack.Padding = new Padding(3);
+            tabDatapack.Size = new Size(984, 580);
+            tabDatapack.TabIndex = 2;
+            tabDatapack.Text = "Datapack Generation";
+            tabDatapack.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(btnDatapackDBSendInWorld);
+            groupBox3.Controls.Add(btnDatapackDBOpenFolder);
+            groupBox3.Controls.Add(btnDatapackDBRename);
+            groupBox3.Controls.Add(btnDatapackDBDelete);
+            groupBox3.Controls.Add(listViewPackDB);
+            groupBox3.Location = new Point(695, 6);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(283, 566);
+            groupBox3.TabIndex = 3;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Pack DB";
+            // 
+            // btnDatapackDBSendInWorld
+            // 
+            btnDatapackDBSendInWorld.Location = new Point(146, 509);
+            btnDatapackDBSendInWorld.Name = "btnDatapackDBSendInWorld";
+            btnDatapackDBSendInWorld.Size = new Size(136, 40);
+            btnDatapackDBSendInWorld.TabIndex = 4;
+            btnDatapackDBSendInWorld.Text = "Send In Current World";
+            btnDatapackDBSendInWorld.UseVisualStyleBackColor = true;
+            // 
+            // btnDatapackDBOpenFolder
+            // 
+            btnDatapackDBOpenFolder.Location = new Point(8, 509);
+            btnDatapackDBOpenFolder.Name = "btnDatapackDBOpenFolder";
+            btnDatapackDBOpenFolder.Size = new Size(136, 40);
+            btnDatapackDBOpenFolder.TabIndex = 3;
+            btnDatapackDBOpenFolder.Text = "Open DB Folder";
+            btnDatapackDBOpenFolder.UseVisualStyleBackColor = true;
+            // 
+            // btnDatapackDBRename
+            // 
+            btnDatapackDBRename.Location = new Point(146, 466);
+            btnDatapackDBRename.Name = "btnDatapackDBRename";
+            btnDatapackDBRename.Size = new Size(136, 40);
+            btnDatapackDBRename.TabIndex = 2;
+            btnDatapackDBRename.Text = "Rename";
+            btnDatapackDBRename.UseVisualStyleBackColor = true;
+            // 
+            // btnDatapackDBDelete
+            // 
+            btnDatapackDBDelete.Location = new Point(8, 466);
+            btnDatapackDBDelete.Name = "btnDatapackDBDelete";
+            btnDatapackDBDelete.Size = new Size(136, 40);
+            btnDatapackDBDelete.TabIndex = 1;
+            btnDatapackDBDelete.Text = "Delete";
+            btnDatapackDBDelete.UseVisualStyleBackColor = true;
+            // 
+            // listViewPackDB
+            // 
+            listViewPackDB.Location = new Point(6, 61);
+            listViewPackDB.Name = "listViewPackDB";
+            listViewPackDB.Size = new Size(271, 388);
+            listViewPackDB.TabIndex = 0;
+            listViewPackDB.UseCompatibleStateImageBehavior = false;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(btnDatapackManagementOpenFolden);
+            groupBox2.Controls.Add(btnDatapackManagementSendInDB);
+            groupBox2.Controls.Add(btnDatapackManagementRename);
+            groupBox2.Controls.Add(btnDatapackManagementDelete);
+            groupBox2.Controls.Add(listViewWorldPacks);
+            groupBox2.Location = new Point(364, 6);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(321, 566);
+            groupBox2.TabIndex = 2;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Management";
+            // 
+            // btnDatapackManagementOpenFolden
+            // 
+            btnDatapackManagementOpenFolden.Location = new Point(16, 509);
+            btnDatapackManagementOpenFolden.Name = "btnDatapackManagementOpenFolden";
+            btnDatapackManagementOpenFolden.Size = new Size(136, 40);
+            btnDatapackManagementOpenFolden.TabIndex = 4;
+            btnDatapackManagementOpenFolden.Text = "Open Datapacks Folder";
+            btnDatapackManagementOpenFolden.UseVisualStyleBackColor = true;
+            // 
+            // btnDatapackManagementSendInDB
+            // 
+            btnDatapackManagementSendInDB.Location = new Point(167, 509);
+            btnDatapackManagementSendInDB.Name = "btnDatapackManagementSendInDB";
+            btnDatapackManagementSendInDB.Size = new Size(136, 40);
+            btnDatapackManagementSendInDB.TabIndex = 3;
+            btnDatapackManagementSendInDB.Text = "Send In PackDB";
+            btnDatapackManagementSendInDB.UseVisualStyleBackColor = true;
+            // 
+            // btnDatapackManagementRename
+            // 
+            btnDatapackManagementRename.Location = new Point(167, 466);
+            btnDatapackManagementRename.Name = "btnDatapackManagementRename";
+            btnDatapackManagementRename.Size = new Size(136, 40);
+            btnDatapackManagementRename.TabIndex = 2;
+            btnDatapackManagementRename.Text = "Rename";
+            btnDatapackManagementRename.UseVisualStyleBackColor = true;
+            // 
+            // btnDatapackManagementDelete
+            // 
+            btnDatapackManagementDelete.Location = new Point(16, 466);
+            btnDatapackManagementDelete.Name = "btnDatapackManagementDelete";
+            btnDatapackManagementDelete.Size = new Size(136, 40);
+            btnDatapackManagementDelete.TabIndex = 1;
+            btnDatapackManagementDelete.Text = "Delete";
+            btnDatapackManagementDelete.UseVisualStyleBackColor = true;
+            // 
+            // listViewWorldPacks
+            // 
+            listViewWorldPacks.Location = new Point(6, 61);
+            listViewWorldPacks.Name = "listViewWorldPacks";
+            listViewWorldPacks.Size = new Size(306, 388);
+            listViewWorldPacks.TabIndex = 0;
+            listViewWorldPacks.UseCompatibleStateImageBehavior = false;
+            listViewWorldPacks.View = View.List;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(checkboxCreateDatapackOpenDatapackFolden);
+            groupBox1.Controls.Add(buttonGenerateDatapack);
+            groupBox1.Controls.Add(lblDatapackCreateDesc);
+            groupBox1.Controls.Add(lblDatapackCreateName);
+            groupBox1.Controls.Add(txbDatapackCreationDesc);
+            groupBox1.Controls.Add(txbDatapackCreationId);
+            groupBox1.Controls.Add(checkBoxDatapackLoadFunction);
+            groupBox1.Controls.Add(checkBoxDatapackLoopFunction);
+            groupBox1.Location = new Point(8, 6);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(350, 566);
+            groupBox1.TabIndex = 1;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Creation";
+            // 
+            // checkboxCreateDatapackOpenDatapackFolden
+            // 
+            checkboxCreateDatapackOpenDatapackFolden.Location = new Point(114, 513);
+            checkboxCreateDatapackOpenDatapackFolden.Name = "checkboxCreateDatapackOpenDatapackFolden";
+            checkboxCreateDatapackOpenDatapackFolden.Size = new Size(143, 19);
+            checkboxCreateDatapackOpenDatapackFolden.TabIndex = 7;
+            checkboxCreateDatapackOpenDatapackFolden.Text = "Open Datapack Folder";
+            checkboxCreateDatapackOpenDatapackFolden.UseVisualStyleBackColor = true;
+            // 
+            // buttonGenerateDatapack
+            // 
+            buttonGenerateDatapack.Location = new Point(15, 450);
+            buttonGenerateDatapack.Name = "buttonGenerateDatapack";
+            buttonGenerateDatapack.Size = new Size(318, 57);
+            buttonGenerateDatapack.TabIndex = 6;
+            buttonGenerateDatapack.Text = "Generate";
+            buttonGenerateDatapack.UseVisualStyleBackColor = true;
+            buttonGenerateDatapack.Click += buttonGenerateDatapack_Click;
+            // 
+            // lblDatapackCreateDesc
+            // 
+            lblDatapackCreateDesc.AutoSize = true;
+            lblDatapackCreateDesc.Location = new Point(22, 103);
+            lblDatapackCreateDesc.Name = "lblDatapackCreateDesc";
+            lblDatapackCreateDesc.Size = new Size(67, 15);
+            lblDatapackCreateDesc.TabIndex = 5;
+            lblDatapackCreateDesc.Text = "Description";
+            // 
+            // lblDatapackCreateName
+            // 
+            lblDatapackCreateName.AutoSize = true;
+            lblDatapackCreateName.Location = new Point(21, 65);
+            lblDatapackCreateName.Name = "lblDatapackCreateName";
+            lblDatapackCreateName.Size = new Size(39, 15);
+            lblDatapackCreateName.TabIndex = 4;
+            lblDatapackCreateName.Text = "Name";
+            // 
+            // txbDatapackCreationDesc
+            // 
+            txbDatapackCreationDesc.Location = new Point(114, 100);
+            txbDatapackCreationDesc.Multiline = true;
+            txbDatapackCreationDesc.Name = "txbDatapackCreationDesc";
+            txbDatapackCreationDesc.Size = new Size(219, 58);
+            txbDatapackCreationDesc.TabIndex = 3;
+            // 
+            // txbDatapackCreationId
+            // 
+            txbDatapackCreationId.Location = new Point(114, 62);
+            txbDatapackCreationId.Name = "txbDatapackCreationId";
+            txbDatapackCreationId.Size = new Size(219, 23);
+            txbDatapackCreationId.TabIndex = 2;
+            // 
+            // checkBoxDatapackLoadFunction
+            // 
+            checkBoxDatapackLoadFunction.Location = new Point(88, 208);
+            checkBoxDatapackLoadFunction.Name = "checkBoxDatapackLoadFunction";
+            checkBoxDatapackLoadFunction.Size = new Size(102, 19);
+            checkBoxDatapackLoadFunction.TabIndex = 1;
+            checkBoxDatapackLoadFunction.Text = "Load Function";
+            checkBoxDatapackLoadFunction.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxDatapackLoopFunction
+            // 
+            checkBoxDatapackLoopFunction.Location = new Point(88, 183);
+            checkBoxDatapackLoopFunction.Name = "checkBoxDatapackLoopFunction";
+            checkBoxDatapackLoopFunction.Size = new Size(103, 19);
+            checkBoxDatapackLoopFunction.TabIndex = 0;
+            checkBoxDatapackLoopFunction.Text = "Loop Function";
+            checkBoxDatapackLoopFunction.UseVisualStyleBackColor = true;
             // 
             // labelKeyWorldName
             // 
@@ -498,10 +739,14 @@ namespace MCMapCare
             panelInfoScroll.PerformLayout();
             tabPageMerge.ResumeLayout(false);
             groupBoxDimensions.ResumeLayout(false);
-            groupBoxDimensions.PerformLayout();
             groupBoxWorldList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridViewWorlds).EndInit();
             panelWorldListButtons.ResumeLayout(false);
+            tabDatapack.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -541,5 +786,27 @@ namespace MCMapCare
         private Button btnStartMerge;
         private ProgressBar progressBarMerge;
         private Label labelStatus;
+        private TabPage tabDatapack;
+        private GroupBox groupBox1;
+        private CheckBox checkBoxDatapackLoopFunction;
+        private CheckBox checkBoxDatapackLoadFunction;
+        private TextBox txbDatapackCreationDesc;
+        private TextBox txbDatapackCreationId;
+        private Button buttonGenerateDatapack;
+        private Label lblDatapackCreateDesc;
+        private Label lblDatapackCreateName;
+        private CheckBox checkboxCreateDatapackOpenDatapackFolden;
+        private GroupBox groupBox2;
+        private ListView listViewWorldPacks;
+        private Button btnDatapackManagementSendInDB;
+        private Button btnDatapackManagementRename;
+        private Button btnDatapackManagementDelete;
+        private GroupBox groupBox3;
+        private Button btnDatapackDBOpenFolder;
+        private Button btnDatapackDBRename;
+        private Button btnDatapackDBDelete;
+        private ListView listViewPackDB;
+        private Button btnDatapackManagementOpenFolden;
+        private Button btnDatapackDBSendInWorld;
     }
 }
